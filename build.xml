@@ -1,0 +1,30 @@
+<project name="hackathon-websockets" default="run">
+    <!-- ===================================================== -->
+    <!-- Briefly, the build lifecycle follows:                 -->
+    <!-- init -> compile -> test -> package -> stage -> deploy -->
+    <!-- ===================================================== -->
+    <path id="jetty.plugin.classpath">
+        <fileset dir="lib" includes="*.jar"/>
+    </path>
+
+    <taskdef classpathref="jetty.plugin.classpath" resource="tasks.properties" loaderref="jetty.loader" />
+
+    <target name="run">
+        <path id="classpath">
+            <fileset dir="${basedir}/lib">
+                <include name="*.jar"/>
+            </fileset>
+        </path>
+        
+        <echo>
+===============================================================================
+ Starting up Jetty http server on port 8001
+ Fire up your browser to http://localhost:8001
+===============================================================================
+        </echo>
+
+        <script classpathref="classpath" language="beanshell" src="bin/run_services.bsh"/>
+
+        <jetty jettyxml="etc/jetty.xml"/>
+    </target>
+</project>

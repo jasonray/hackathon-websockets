@@ -1,0 +1,20 @@
+import java.io.*;
+import java.util.*;
+import java.util.regex.*;
+import org.apache.tools.ant.taskdefs.ExecTask;
+import org.apache.tools.ant.taskdefs.Delete;
+import org.apache.tools.ant.taskdefs.*;
+import org.apache.tools.ant.types.*;
+import org.apache.activemq.broker.*;
+import difflib.*;
+
+new Thread(){
+    public void run(){
+        BrokerService broker = new BrokerService();
+        broker.setBrokerName("ci");
+        broker.addConnector("stomp://0.0.0.0:61613");
+        broker.addConnector("ws://0.0.0.0:61614");
+        broker.addConnector("tcp://0.0.0.0:61616");
+        broker.start();
+    }
+}.start();
