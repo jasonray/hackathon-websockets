@@ -25,6 +25,6 @@
 
         <jetty jettyxml="etc/jetty.xml"/>
 
-        <script classpathref="classpath" language="beanshell" src="bin/run_services.bsh"/>
+<!--        <script classpathref="classpath" language="beanshell" src="bin/run_services.bsh"/> -->
     </target>
 </project>

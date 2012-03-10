@@ -64,8 +64,11 @@
 	  } else {
 	          Stomple.debug = true;
 		  var client = Stomple.create_client({
-			  url: "ws://localhost:61614",
+			  url: "ws://192.168.101.96:61614/stomp",
 			  destination: "jms.topic.chat",
+                          login: "guest",
+                          passcode: "guest",
+
 				socketOpen: function() {
 					console.log("socket opened");
 				},
