@@ -5,56 +5,16 @@
 	<title>Hackathon - Websockets</title>
 	<script type="text/javascript" src="https://raw.github.com/krukow/stomple/master/src/stomple.js"></script>
 	<script>
-	
-	var Task = function(title, state) {
-		this.title = title;
-		this.state = state;	
-	}
-	var tasks = new Task("test title", "test-state");
 
-	  /*function begin() {
-		client.begin({});
-	  }
-	  function commit() {
-		client.commit({});
-	  }
-	  function abort() {
-		  client.abort({});
-	  }
-	  function disconnect() {
-		  client.disconnect({success: function(){console.log("dis");}, failure: function(){console.log(42);}});
-	  }
-	  function reset() {
-		  document.getElementById('inputText').value = '';
-		  document.getElementById('content').innerHTML = '';
-	  }*/
-      var handleKeyDown = function (e) {
-		 e = e || window.event;
-		 var kc = e.keyCode,
-		 	 ki = e.keyIdentifier;
-		 if ((ki && ki.toLowerCase() === "enter") || (kc === 13)) {
-			sendMsg();
-			document.getElementById('inputText').value = '';
-	     }
-      }
-
-	 UUIDv4 = function b(a){
-		return a?(a^Math.random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,b)
-		}
-
-	 function refreshContent(){
-		
+	function refreshContent(){
 		document.getElementById("output").innerHTML = '';
-		
 		for (var i = 0; i < localStorage.length; i++){
 		    var task = JSON.parse(localStorage.getItem(localStorage.key(i)));
-		
 			document.getElementById("output").innerHTML = document.getElementById("output").innerHTML + task.title + ": " + task.state + "<br />";
-
 		}
 
 	}	
-	  function saveTask() {
+	function saveTask() {
 		var title = document.getElementById("title").value;
 		var state = document.getElementById("state").value;
 		var taskToSend = new Task(title, state);
@@ -62,79 +22,10 @@
 		localStorage.setItem(UUIDv4(), JSON.stringify(taskToSend));
 
 		refreshContent();
-		
-		/*
-		client.send({
-			body: client.session+": "+i.value,
-		});
-		*/
+		send_task(client, taskToSend);
 	  }
-	function print(task) {
-		
-	} 
-	  if (!Stomple) {
-		  document.getElementById('content').innerHTML = "Your browser doesn't support Stomple. Google Chrome does.";
-		  document.getElementById('sendBtn').disabled = true;
-		  document.getElementById('resetBtn').disabled = true;
-		  document.getElementById('beginBtn').disabled = true;
-		  document.getElementById('commitBtn').disabled = true;
-		  document.getElementById('abortBtn').disabled = true;
-		  document.getElementById('inputText').readonly = true;
-		  handleKeyDown = function(){};
-	  } else {
-	          Stomple.debug = true;
-		  var client = Stomple.create_client({
-			  	url: "ws://" + window.location.hostname + ":61614/stomp",
-			  	destination: "jms.topic.chat",
-				login: "guest",
-                passcode: "guest",
+	  
 
-				socketOpen: function() {
-					console.log("socket opened");
-				},
-		        
-		        socketMessage: function(msg) {
-					console.log("socket msg");
-					console.log(msg);
-			    },
-		        
-		        socketClose: function(e) {
-					console.log("socket close");
-					console.log(e);
-			    },
-		        
-				socketError: function() {
-					console.log("socket error");
-					console.log(client.websocket);
-					return false;
-				}
-			  
-		  });
-		  var msgHandler = {
-				fn: function(task) {
-					upateLocalStorage(task);
-				  	var c = document.getElementById('output');
-					c.innerHTML = c.innerHTML + '<br>' + msg.body;
-				}
-		  };
-			var updateLocalStorage = {
-				fn: function(task) {
-					// store in the local storage database
-				}
-			}
-		  client.subscribe({
-			handler: msgHandler.fn,
-			thisObj: msgHandler,
-			
-			success: function() {	//did subscription succeed?
-				console.log("sub ok..");
-			},
-			failure: function(reason) {		//did subscription fail?
-				console.log(reason);
-			}
-		  });
-
-	  }
 	
 
 	  
