@@ -23,8 +23,11 @@
 ===============================================================================
         </echo>
 
-        <jetty jettyxml="etc/jetty.xml"/>
-
 <!--        <script classpathref="classpath" language="beanshell" src="bin/run_services.bsh"/> -->
+        <exec executable="/bin/sh" dir="${basedir}/stomple" spawn="true">
+            <arg line="${basedir}/stomple/hornetq/bin/run.sh hornetq/examples/jms/stomp-websockets/server0"/>
+        </exec>
+
+        <jetty jettyxml="etc/jetty.xml"/>
     </target>
 </project>
