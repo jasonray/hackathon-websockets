@@ -23,8 +23,8 @@
 ===============================================================================
         </echo>
 
-        <script classpathref="classpath" language="beanshell" src="bin/run_services.bsh"/>
-
         <jetty jettyxml="etc/jetty.xml"/>
+
+        <script classpathref="classpath" language="beanshell" src="bin/run_services.bsh"/>
     </target>
 </project>
