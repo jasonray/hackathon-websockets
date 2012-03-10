@@ -4,24 +4,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>Hackathon - Websockets</title>
 	<script type="text/javascript" src="https://raw.github.com/krukow/stomple/master/src/stomple.js"></script>
-</head>
-<body><p>
-	<label for="inputText">Message: </label>
-		<input type="text" id="inputText" onkeydown='handleKeyDown(arguments[0]);'>
-	<br>
-	<button id="sendBtn" onclick='sendMsg();'>Send</button>
-	<button id="resetBtn" onclick='reset();'>Reset</button>
-	<button id="beginBtn" onclick='begin();'>Begin transaction</button>
-	<button id="commitBtn" onclick='commit();'>Commit transaction</button>
-	<button id="abortBtn" onclick='abort();'>Abort transaction</button>
-	<button id="disBtn" onclick='disconnect();'>Disconnect</button>
-	<p>
-	Chat:<br>
-	<div id="content"></div>
-	<script type="text/javascript">
+	<script>
+	
+	var Task = function(title, state) {
+		this.title = title;
+		this.state = state;	
+	}
+	var tasks = new Task("test title", "test-state");
 
-
-	  function begin() {
+	  /*function begin() {
 		client.begin({});
 	  }
 	  function commit() {
@@ -36,7 +27,7 @@
 	  function reset() {
 		  document.getElementById('inputText').value = '';
 		  document.getElementById('content').innerHTML = '';
-	  }
+	  }*/
       var handleKeyDown = function (e) {
 		 e = e || window.event;
 		 var kc = e.keyCode,
@@ -46,12 +37,20 @@
 			document.getElementById('inputText').value = '';
 	     }
       }
-	  function sendMsg() {
-		var i = document.getElementById('inputText');
+	  function saveTask() {
+		var title = document.getElementById("title");
+		var state = document.getElementById("state");
+		var taskToSend = new Task(title, state);
+		document.getElementById("output").innerHTML = document.getElementById("output").innerHTML + taskToSend.title.value + ": " + taskToSend.state.value + "<br />";
+		/*
 		client.send({
 			body: client.session+": "+i.value,
 		});
+		*/
 	  }
+	function print(task) {
+		
+	} 
 	  if (!Stomple) {
 		  document.getElementById('content').innerHTML = "Your browser doesn't support Stomple. Google Chrome does.";
 		  document.getElementById('sendBtn').disabled = true;
@@ -64,11 +63,10 @@
 	  } else {
 	          Stomple.debug = true;
 		  var client = Stomple.create_client({
-			  url: "ws://" + window.location.hostname + ":61614/stomp",
-
-			  destination: "jms.topic.chat",
-                          login: "guest",
-                          passcode: "guest",
+			  	url: "ws://" + window.location.hostname + ":61614/stomp",
+			  	destination: "jms.topic.chat",
+				login: "guest",
+                passcode: "guest",
 
 				socketOpen: function() {
 					console.log("socket opened");
@@ -92,28 +90,66 @@
 			  
 		  });
 		  var msgHandler = {
-				fn: function(msg) {
-				  	var c = document.getElementById('content');
+				fn: function(task) {
+					upateLocalStorage(task);
+				  	var c = document.getElementById('output');
 					c.innerHTML = c.innerHTML + '<br>' + msg.body;
 				}
 		  };
+			var updateLocalStorage = {
+				fn: function(task) {
+					// store in the local storage database
+				}
+			}
 		  client.subscribe({
 			handler: msgHandler.fn,
 			thisObj: msgHandler,
 			
-			success: function() {//did subscription succeed?
+			success: function() {	//did subscription succeed?
 				console.log("sub ok..");
 			},
-			failure: function(reason) {//did subscription fail?
+			failure: function(reason) {		//did subscription fail?
 				console.log(reason);
 			}
 		  });
 		  document.getElementById('inputText').focus();
 
 	  }
+	
 
 	  
 	  
-	</script>    
+
+	
+	</script>
+</head>
+<body>
+	<label for="title">Title</label>
+	<input type="text" id="title" /> <br />
+	<label for="state">State</label>	
+	<input type="text" id="state" />
+	
+	<input type="button" onclick="saveTask()" value="Save" /><br />
+	
+	<div id="output" style="border: 1px solid #ccc; margin-top: 10px; padding: 5px;">
+	
+	</div>
+	
+	<script type="text/javascript">
+		document.getElementById("output").innerHTML = tasks.title + ": " + tasks.state + "<br />";
+	</script>
+	
+	
+	<!--
+	<div id="">
+	<p id="title"></p>
+	<p id="state"></p>
+	<input id="open" type="radio" name="task">
+	<label for="open">Open</label>
+	<input id="inprogress" type="radio" name="task">
+	<label for="inprogress">In Progress</label>
+	<input id="done" type="radio" name="task">
+	<label for="done">Done</label>
+	-->
 </body>
 </html>
