@@ -1,1 +1,2 @@
-Updated
+Start harnetQ by running the following: 
+ ./hornetq/bin/run.sh ./hornetq/examples/jms/stomp-websockets/server0
