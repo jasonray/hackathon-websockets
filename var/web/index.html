@@ -37,11 +37,32 @@
 			document.getElementById('inputText').value = '';
 	     }
       }
+
+	 UUIDv4 = function b(a){
+		return a?(a^Math.random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,b)
+		}
+
+	 function refreshContent(){
+		
+		document.getElementById("output").innerHTML = '';
+		
+		for (var i = 0; i < localStorage.length; i++){
+		    var task = JSON.parse(localStorage.getItem(localStorage.key(i)));
+		
+			document.getElementById("output").innerHTML = document.getElementById("output").innerHTML + task.title + ": " + task.state + "<br />";
+
+		}
+
+	}	
 	  function saveTask() {
-		var title = document.getElementById("title");
-		var state = document.getElementById("state");
+		var title = document.getElementById("title").value;
+		var state = document.getElementById("state").value;
 		var taskToSend = new Task(title, state);
-		document.getElementById("output").innerHTML = document.getElementById("output").innerHTML + taskToSend.title.value + ": " + taskToSend.state.value + "<br />";
+
+		localStorage.setItem(UUIDv4(), JSON.stringify(taskToSend));
+
+		refreshContent();
+		
 		/*
 		client.send({
 			body: client.session+": "+i.value,
@@ -112,7 +133,6 @@
 				console.log(reason);
 			}
 		  });
-		  document.getElementById('inputText').focus();
 
 	  }
 	
